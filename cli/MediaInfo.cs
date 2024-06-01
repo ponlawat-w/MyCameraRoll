@@ -1,4 +1,5 @@
-﻿using MetadataExtractor;
+﻿using System.Globalization;
+using MetadataExtractor;
 using MetadataExtractor.Formats.Exif;
 using MetadataExtractor.Formats.QuickTime;
 
@@ -55,8 +56,8 @@ public class MediaFile
     public string GetDateString()
     {
         DateTime createdDate = GetCreatedDate();
-        string year = (int.Parse(createdDate.ToString("yyyy")) + 543).ToString();
-        return createdDate.ToString($"{year}MMdd-HHmmss");
+        string year = (int.Parse(createdDate.ToString("yyyy", CultureInfo.InvariantCulture)) + 543).ToString();
+        return createdDate.ToString($"{year}MMdd-HHmmss", CultureInfo.InvariantCulture);
     }
 
     public string Rename()
