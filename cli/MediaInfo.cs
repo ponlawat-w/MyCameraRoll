@@ -62,7 +62,7 @@ public class MediaFile
         return createdDate.ToString($"{year}MMdd-HHmmss", CultureInfo.InvariantCulture);
     }
 
-    public string Rename()
+    public RenameResult Rename()
     {
         string directory = Path.GetDirectoryName(FilePath) ?? "";
 
@@ -70,7 +70,7 @@ public class MediaFile
 
         string dateString = GetDateString();
         string currentName = Path.GetFileNameWithoutExtension(FilePath);
-        if (currentName.Length > 14 && currentName[..15] == dateString) return FilePath + " (Ignored)";
+        if (currentName.Length > 14 && currentName[..15] == dateString) return new(Path.GetFileName(FilePath), false);
 
         string extension = Path.GetExtension(FilePath).ToLower();
 
@@ -84,6 +84,6 @@ public class MediaFile
         while (Path.Exists(newPath));
 
         File.Move(FilePath, newPath);
-        return newPath;
+        return new(Path.GetFileName(newPath), true);
     }
 }

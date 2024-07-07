@@ -9,10 +9,10 @@ foreach (string filePath in Directory.GetFiles(directory))
 {
     if (Path.GetFileName(filePath) == ".DS_Store") continue;
     if (Directory.Exists(filePath)) continue;
-    Console.WriteLine(filePath);
+    Console.Write(Path.GetFileName(filePath));
     MediaFile file = new(filePath);
-    string newPath = file.Rename();
-    Console.WriteLine($"  -> {newPath}");
+    RenameResult result = file.Rename();
+    Console.WriteLine(result.Renamed ? $" -> {result.FileName}" : " -x (Ignored)");
 }
 
 Console.WriteLine("Done");
