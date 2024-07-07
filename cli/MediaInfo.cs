@@ -45,6 +45,8 @@ public class MediaFile
         GpsDirectory? gpsDirectory = metadata.OfType<GpsDirectory>().FirstOrDefault();
         if (gpsDirectory?.TryGetGpsDate(out takenDate) ?? false) return takenDate;
 
+        if (exifDirectory?.TryGetDateTime(ExifDirectoryBase.TagDateTimeDigitized, out takenDate) ?? false) return takenDate;
+
         return null;
     }
 
@@ -66,6 +68,10 @@ public class MediaFile
 
         if (directory == "") throw new Exception("Unable to retreive directory path");
 
+        string dateString = GetDateString();
+        string currentName = Path.GetFileNameWithoutExtension(FilePath);
+        if (currentName.Length > 14 && currentName[..15] == dateString) return FilePath + " (Ignored)";
+
         string extension = Path.GetExtension(FilePath).ToLower();
 
         string newPath;
@@ -73,7 +79,7 @@ public class MediaFile
         int i = 0;
         do
         {
-            newPath = Path.Join(directory, $"{GetDateString()}-{(++i).ToString().PadLeft(2, '0')}{extension}");
+            newPath = Path.Join(directory, $"{dateString}-{(++i).ToString().PadLeft(2, '0')}{extension}");
         }
         while (Path.Exists(newPath));
 
